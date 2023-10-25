@@ -1,4 +1,6 @@
-namespace TableSlot;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class TableSlot
 {
@@ -32,7 +34,6 @@ public class GamePiece
 {
     // Properties to store information about the game piece
     public string Name { get; set; }
-    // Add more properties as needed
 
     // Constructor
     public GamePiece(string name)

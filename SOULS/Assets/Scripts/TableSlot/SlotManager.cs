@@ -5,62 +5,67 @@ using UnityEngine;
 public class SlotManager : MonoBehaviour
 {
     public GameObject selectedCard;  // Reference to the card object
-    public GameObject slot1;
-    public GameObject slot2;
-    public GameObject slot3;
-    public GameObject slot4;
-    public GameObject slot5;
-    public GameObject slot6;
+    public GameObject[] slots = new GameObject[6]; // Use an array to store slots
+
     private int userNumber = 0;
-    private bool isInputValid = false; // Flag to control input validation
 
     public void slot()
     {
-        while (!isInputValid)
-        {
-            CheckForNumberInput();
-        }
+        Debug.Log("Button is clicked");
+
+        int num = GetUserInput();
+
+        // Use the valid user input for further logic here
+        Debug.Log("User input: " + num);
     }
 
-    private void CheckForNumberInput()
+    private int GetUserInput()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        int input = -1; // Initialize input to an invalid value
+
+        while (input < 1 || input > 6)
         {
-            userNumber = 1;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            userNumber = 2;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            userNumber = 3;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            userNumber = 4;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            userNumber = 5;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            userNumber = 6;
+            Debug.Log("Enter a number from 1 to 6");
+
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                input = 1;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                input = 2;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                input = 3;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                input = 4;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                input = 5;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                input = 6;
+            }
         }
 
-        if (userNumber >= 1 && userNumber <= 6)
-        {
-            Debug.Log("Valid input: " + userNumber);
-            isInputValid = true; // Set the flag to true to exit input checking
-        }
-        else
-        {
-            Debug.Log("Please enter a number from 1 to 6.");
-        }
+        // At this point, 'input' contains a valid number between 1 and 6
+        HandleInput(input);
+
+        return input;
+    }
+
+    private void HandleInput(int number)
+    {
+        // Input is a valid number between 1 and 6
+        Debug.Log("Valid input between 1 and 6 detected: " + number);
+        userNumber = number; // Store the input for later use
     }
 }
-
 /*
     // Update is called once per frame
     void Update()

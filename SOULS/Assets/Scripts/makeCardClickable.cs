@@ -1,31 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class makeCardClickable : MonoBehaviour
 {
-    public UnityEvent unityEvent = new UnityEvent(); //variable to call unity events
-    public GameObject button; //variable for button object
-    public SlotManager SlotManager;
+    public makeButton buttonScript; // Reference to the makeButton script
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        turnManager = GameObject.Find("SlotManager").GetComponent<SlotManager>();
-        button = this.gameObject; //setting unity object as button
+        // Find the makeButton script in the scene
+        buttonScript = FindObjectOfType<makeButton>();
+
+        if (buttonScript != null)
+        {
+            // Add a custom method to execute when the card is clicked
+            buttonScript.unityEvent.AddListener(OnCardClicked);
+        }
+        else
+        {
+            Debug.LogError("makeButton script not found in the scene.");
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    // Custom method to handle what happens when the card is clicked
+    public void OnCardClicked()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //finding where in 3D space the player clicks
-        RaycastHit hit; //variable to track where ray intersects with game objects
-        if (Input.GetMouseButtonDown(0))
-        { //if user clicks
-            if (Physics.Raycast(ray, out hit) && hit.collider.gameObject == gameObject)
-            { //if click on button
-                SlotManager.slot(); //trigger event in separate script
-            }
-        }
+        // Implement the functionality you want when the card is clicked.
+        
+        Debug.Log("Card Clicked: " + name); // Output card name as an example.
     }
 }

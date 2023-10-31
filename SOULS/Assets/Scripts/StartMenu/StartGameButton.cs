@@ -15,6 +15,7 @@ public class startGameButton : MonoBehaviour
     {
         MenuManager = GameObject.Find("MenuManager").GetComponent<MenuManager>();
         button = this.gameObject; //setting unity object as button
+
     }
 
     // Update is called once per frame

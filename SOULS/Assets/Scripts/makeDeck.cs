@@ -3,9 +3,10 @@ using System.Collections;
 using System.Reflection;
 using System.Threading;
 using System.IO;
+using Newtonsoft.Json;
 using Random = System.Random;
 using UnityEngine;
-using Newtonsoft.Json;
+using UnityEngine.Events;
 
 public class Card : MonoBehaviour { // card class for card variables
     public string CardName { get; set; }
@@ -22,10 +23,6 @@ public class Card : MonoBehaviour { // card class for card variables
         return $"{CardName} - {Description} (Attack: {Attack}, Health: {Health}, Skill: {Skill ?? "None"}, Texture: {Texture}, BorderColor: {BorderColor ?? "None"}, Probability: {Probability})";
     }
 }
-//public class CardsContainer
-//{
-//    List<Card> cp { get; set; }
-//}
 
 public class makeDeck : MonoBehaviour{ // make deck class, instatiate for decks and card_pool
 
@@ -33,7 +30,11 @@ public class makeDeck : MonoBehaviour{ // make deck class, instatiate for decks 
     public Dictionary<string, Stack<Card>> decks = new();
     public Dictionary<string, List<Card>> hands = new();
     public List<Card> card_pool;
-    
+
+    void Start()
+    {
+        this.GameStart();
+    }
     public void GameStart(){
         DeserializeCards();
         decks.Add("deck1", CreateRandomDeck(card_pool, 25));

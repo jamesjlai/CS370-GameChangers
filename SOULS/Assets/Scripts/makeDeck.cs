@@ -1,5 +1,9 @@
 using System.Collections.Generic;
 using System.Collections;
+using System.Reflection;
+using System.Threading;
+using System.IO;
+using Random = System.Random;
 using UnityEngine;
 using Newtonsoft.Json;
 
@@ -24,9 +28,10 @@ public class Card : MonoBehaviour { // card class for card variables
 //}
 
 public class makeDeck : MonoBehaviour{ // make deck class, instatiate for decks and card_pool
-    
-    
-    public Dictionary<string, object> globalVariables = new Dictionary<string, object>();
+
+
+    public Dictionary<string, Stack<Card>> decks = new();
+    public Dictionary<string, List<Card>> hands = new();
     public List<Card> card_pool;
     
     public void GameStart(){
@@ -41,7 +46,7 @@ public class makeDeck : MonoBehaviour{ // make deck class, instatiate for decks 
 
     public void DeserializeCards()
     {
-        string path = AppDomain.CurrentDomain.BaseDirectory + "Cards.json";
+        string path = Path.Combine(Directory.GetCurrentDirectory(), "Cards/Cards.Json");
         string jsonData = File.ReadAllText(path);
         this.card_pool = JsonConvert.DeserializeObject<List<Card>>(jsonData);
     }
@@ -67,16 +72,16 @@ public class makeDeck : MonoBehaviour{ // make deck class, instatiate for decks 
     }
 
     public void Draw(string hand, string deck, int draw_amount){
-        if (globalVariables[deck].Peek() == null) throw new InvalidOperationException("Deck Empty");;
-        while(deck.Peek() != null && draw_amount > 0) {
-            globalVariables[hand].Add(globalVariables[deck].Pop());
+        if (decks[deck].Peek() == null) return;
+        while (decks[deck].Peek() != null && draw_amount > 0) {
+            hands[hand].Add(decks[deck].Pop());
             draw_amount--;
         }
     }
 
     public void Discard(string hand, Card card) {
-        if (globalVaraibles[hand].Contains(card) == false) throw new InvalidOperationException("Card not in hand.");
-        globalVariables[hand].Remove(card);
+        if (hands[hand].Contains(card) == false) return;
+        hands[hand].Remove(card);
     }
 
 }

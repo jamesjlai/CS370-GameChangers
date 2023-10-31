@@ -36,12 +36,12 @@ public class makeDeck : MonoBehaviour{ // make deck class, instatiate for decks 
     
     public void GameStart(){
         DeserializeCards();
-        //globalVariables.Add("deck1", CreateRandomDeck(card_pool, 25));
-        //globalVariables.Add("deck2", CreateRandomDeck(card_pool, 25));
-        //globalVariables.Add("hand1", new List<Card>());
-        //globalVariables.Add("hand2", new List<Card>());
-        //Draw(hand1, deck1, 4);
-        //Draw(hand2, deck2, 4);
+        decks.Add("deck1", CreateRandomDeck(card_pool, 25));
+        decks.Add("deck2", CreateRandomDeck(card_pool, 25));
+        hands.Add("hand1", new List<Card>());
+        hands.Add("hand2", new List<Card>());
+        Draw("hand1", "deck1", 4);
+        Draw("hand2", "deck2", 4);
     }
 
     public void DeserializeCards()

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
@@ -11,12 +12,12 @@ using UnityEngine.Events;
 public class Card : MonoBehaviour { // card class for card variables
     public string CardName { get; set; }
     public string Description { get; set; }
-    public int Attack { get; set; }
-    public int Health { get; set; }
+    public string Attack { get; set; }
+    public string Health { get; set; }
     public string Skill { get; set; }
-    public int Texture { get; set; }
+    public string Texture { get; set; }
     public string BorderColor { get; set; }
-    public int Probability { get; set; }
+    public string Probability { get; set; }
 
 
     public override string ToString()
@@ -44,9 +45,13 @@ public class makeDeck : MonoBehaviour{ // make deck class, instatiate for decks 
     public void DeserializeCards()
     {
         string path = Path.Combine(Directory.GetCurrentDirectory(), "Assets/Scripts/Cards/Cards.json");
-        string jsonData = File.ReadAllText(path);
-        List<Card> cards = JsonConvert.DeserializeObject<List<Card>>(jsonData);
-        card_pool = cards;
+        if (System.IO.File.Exists(path))
+        {
+            string jsonData = File.ReadAllText(path);
+            List<Card> cards = JsonConvert.DeserializeObject<List<Card>>(jsonData);
+            card_pool = cards;
+        }
+        else throw new ArgumentException("path doesnt work");
     }
 
     public Card DrawRandom()

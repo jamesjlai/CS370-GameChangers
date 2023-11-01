@@ -25,9 +25,10 @@ public class makeDrawCardButtonClickable : MonoBehaviour
         if(Input.GetMouseButtonDown(0)) { //if user clicks
             if(Physics.Raycast(ray,out hit) && hit.collider.gameObject == gameObject) { //if click on button
                 makeDeck.Draw("hand1", "deck1", 1); //trigger event in separate script
+                Debug.Log("hi");
                 
                 for (int i = 0; i > makeDeck.hands["hand1"].Count; i++) {
-                    Debug.Log((makeDeck.hands["hand1"][i]).ToString());
+                    //Debug.Log((makeDeck.hands["hand1"][i]).ToString());
                 }
             }
         }

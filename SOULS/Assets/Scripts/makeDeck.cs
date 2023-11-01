@@ -55,7 +55,8 @@ public class makeDeck : MonoBehaviour{ // make deck class, instatiate for decks 
         bool isNullOrEmpty = card_pool?.Any() != true;
         if (isNullOrEmpty)
         {
-            return new Card();
+            Card newCard = gameObject.AddComponent(typeof(Card)) as Card;
+            return newCard;
         }
         else
         {

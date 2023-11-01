@@ -18,6 +18,7 @@ public class Card : MonoBehaviour { // card class for card variables
     public string BorderColor { get; set; }
     public int Probability { get; set; }
 
+
     public override string ToString()
     {
         return $"{CardName} - {Description} (Attack: {Attack}, Health: {Health}, Skill: {Skill ?? "None"}, Texture: {Texture}, BorderColor: {BorderColor ?? "None"}, Probability: {Probability})";
@@ -26,14 +27,13 @@ public class Card : MonoBehaviour { // card class for card variables
 
 public class makeDeck : MonoBehaviour{ // make deck class, instatiate for decks and card_pool
 
-
     public Dictionary<string, Stack<Card>> decks = new();
     public Dictionary<string, List<Card>> hands = new();
     public List<Card> card_pool;
 
     void Start()
     {
-        this.GameStart();
+        GameStart();
     }
     public void GameStart(){
         DeserializeCards();
@@ -47,15 +47,15 @@ public class makeDeck : MonoBehaviour{ // make deck class, instatiate for decks 
 
     public void DeserializeCards()
     {
-        string path = Path.Combine(Directory.GetCurrentDirectory(), "Cards/Cards.Json");
+        string path = Path.Combine(Directory.GetCurrentDirectory(), "Assets/Scripts/Cards/Cards.json");
         string jsonData = File.ReadAllText(path);
         this.card_pool = JsonConvert.DeserializeObject<List<Card>>(jsonData);
     }
 
     public static Card DrawRandom(List<Card> pool)
     {
-        Random random = new();
-        int randomIndex = random.Next(pool.Count);
+        Random rand = new Random();
+        int randomIndex = rand.Next(pool.Count);
         Card originalCard = pool[randomIndex];
         return originalCard;
     }

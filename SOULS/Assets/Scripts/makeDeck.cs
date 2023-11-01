@@ -1,10 +1,10 @@
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
 using System.Reflection;
 using System.Threading;
 using System.IO;
 using Newtonsoft.Json;
-using Random = System.Random;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -29,12 +29,8 @@ public class makeDeck : MonoBehaviour{ // make deck class, instatiate for decks 
 
     public Dictionary<string, Stack<Card>> decks = new();
     public Dictionary<string, List<Card>> hands = new();
-    public List<Card> card_pool;
-
-    void Start()
-    {
-        GameStart();
-    }
+    public List<Card> card_pool = new();
+  
     public void GameStart(){
         DeserializeCards();
         decks.Add("deck1", CreateRandomDeck(card_pool, 25));
@@ -50,24 +46,30 @@ public class makeDeck : MonoBehaviour{ // make deck class, instatiate for decks 
         string path = Path.Combine(Directory.GetCurrentDirectory(), "Assets/Scripts/Cards/Cards.json");
         string jsonData = File.ReadAllText(path);
         List<Card> cards = JsonConvert.DeserializeObject<List<Card>>(jsonData);
-        this.card_pool = cards;
+        card_pool = cards;
     }
 
-    public static Card DrawRandom(List<Card> pool)
+    public Card DrawRandom()
     {
-        Random rand = new Random();
-        int randomIndex = rand.Next(pool.Count);
-        Card originalCard = pool[randomIndex];
-        return originalCard;
+        var rand = new System.Random();
+        bool isNullOrEmpty = card_pool?.Any() != true;
+        if (isNullOrEmpty)
+        {
+            return new Card();
+        }
+        else
+        {
+            return card_pool[rand.Next(card_pool.Count)];
+        }
     }
 
-    public static Stack<Card> CreateRandomDeck(List<Card> pool, int numberOfCards)
+    public Stack<Card> CreateRandomDeck(List<Card> pool, int numberOfCards)
     {
         Stack<Card> deck = new Stack<Card>();
 
         for (int i = 0; i < numberOfCards; i++)
         {
-            deck.Push(DrawRandom(pool));
+            deck.Push(DrawRandom());
         }
         Stack<Card> temp = deck;
         return deck;

@@ -4,120 +4,104 @@ using UnityEngine;
 
 public class SlotManager : MonoBehaviour
 {
-    public GameObject selectedCard;  // Reference to the card object
-    public GameObject[] slots = new GameObject[6]; // Use an array to store slots
+    public Transform slot1;
+    public Transform slot2;
+    public Transform slot3;
+    public Transform slot4;
+    public Transform slot5;
+    public Transform slot6;
+    public float speed = 2.0f;
+    public bool interpolateRotation = true;
 
-    private int userNumber = 0;
+    private bool isMoving = false;
+    private Vector3 originalPosition;
+    private Quaternion originalRotation;
+    private bool hasMoved = false;
+    private bool slot1check = true;
+    private bool slot2check = false;
+    private bool slot3check = false;
+    private bool slot4check = false;
+    private bool slot5check = false;
+    private bool slot6check = false;
 
-    public void slot()
+    void Start()
     {
-        Debug.Log("Button is clicked");
-
-        int num = GetUserInput();
-
-        // Use the valid user input for further logic here
-        Debug.Log("User input: " + num);
+        originalPosition = transform.position;
+        originalRotation = transform.rotation;
     }
 
-    private int GetUserInput()
-    {
-        int input = -1; // Initialize input to an invalid value
-
-        while (input < 1 || input > 6)
-        {
-            Debug.Log("Enter a number from 1 to 6");
-
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                input = 1;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                input = 2;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                input = 3;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                input = 4;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha5))
-            {
-                input = 5;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha6))
-            {
-                input = 6;
-            }
-        }
-
-        // At this point, 'input' contains a valid number between 1 and 6
-        HandleInput(input);
-
-        return input;
-    }
-
-    private void HandleInput(int number)
-    {
-        // Input is a valid number between 1 and 6
-        Debug.Log("Valid input between 1 and 6 detected: " + number);
-        userNumber = number; // Store the input for later use
-    }
-}
-/*
-    // Update is called once per frame
     void Update()
     {
-        for (int i = 0; i < cardHolders.Length; i++)
+        if (!hasMoved)
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+            if (Input.GetKeyDown(KeyCode.Alpha1) && !isMoving && !slot1check)
             {
-                SelectSlot(i);
+                StartCoroutine(MoveCard(slot1));
+                hasMoved = true;
+                slot1check = true;
             }
-        }
-
-        // Check for input to place the selected card
-        if (selectedCard != null && selectedSlot >= 0 && !IsSlotOccupied(selectedSlot))
-        {
-            PlaceCard(selectedSlot);
+            else if (Input.GetKeyDown(KeyCode.Alpha2) && !isMoving && !slot2check)
+            {
+                StartCoroutine(MoveCard(slot2));
+                hasMoved = true;
+                slot2check = true;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3) && !isMoving && !slot3check)
+            {
+                StartCoroutine(MoveCard(slot3));
+                hasMoved = true;
+                slot3check = true;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4) && !isMoving && !slot4check)
+            {
+                StartCoroutine(MoveCard(slot4));
+                hasMoved = true;
+                slot4check = true;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha5) && !isMoving && !slot5check)
+            {
+                StartCoroutine(MoveCard(slot5));
+                hasMoved = true;
+                slot5check = true;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha6) && !isMoving && !slot6check)
+            {
+                StartCoroutine(MoveCard(slot6));
+                hasMoved = true;
+                slot6check = true;
+            }
         }
     }
 
-    void SelectSlot(int slotIndex)
+    IEnumerator MoveCard(Transform newLocation)
     {
-        if (slotIndex >= 0 && slotIndex < cardHolders.Length)
-        {
-            selectedSlot = slotIndex;
-            Debug.Log("Selected slot: " + cardHolders[slotIndex].name);
-        }
-    }
+        isMoving = true;
+        Vector3 targetPosition = newLocation.position;
+        Quaternion targetRotation = newLocation.rotation;
+        float journeyLength = Vector3.Distance(originalPosition, targetPosition);
+        float startTime = Time.time;
 
-    bool IsSlotOccupied(int slotIndex)
-    {
-        return occupiedSlots[slotIndex] != null;
-    }
-
-    void PlaceCard(int slotIndex)
-    {
-        if (slotIndex >= 0 && slotIndex < cardHolders.Length)
+        while (Time.time - startTime < journeyLength / speed)
         {
-            if (!IsSlotOccupied(slotIndex))
+            float distanceCovered = (Time.time - startTime) * speed;
+            float fractionOfJourney = distanceCovered / journeyLength;
+            transform.position = Vector3.Lerp(originalPosition, targetPosition, fractionOfJourney);
+
+            if (interpolateRotation)
             {
-                GameObject cardHolder = cardHolders[slotIndex];
-                GameObject newCardObject = Instantiate(cardObjectPrefab, cardHolder.transform);
-                newCardObject.transform.localPosition = Vector3.zero; // You may need to adjust the card's position.
-                occupiedSlots[slotIndex] = newCardObject; // Mark the slot as occupied
-                selectedCard = null; // Reset the selected card
-                selectedSlot = -1; // Reset the selected slot
-                Debug.Log("Placed card in slot: " + cardHolders[slotIndex].name);
+                transform.rotation = Quaternion.Slerp(originalRotation, targetRotation, fractionOfJourney);
             }
-            else
-            {
-                Debug.Log("Slot " + cardHolders[slotIndex].name + " is already occupied.");
-            }
+
+            yield return null;
         }
+
+        transform.position = targetPosition;
+
+        if (interpolateRotation)
+        {
+            transform.rotation = targetRotation;
+        }
+
+        isMoving = false;
     }
 }
-*/

@@ -17,7 +17,7 @@ public class SlotManager : MonoBehaviour
     private Vector3 originalPosition;
     private Quaternion originalRotation;
     private bool hasMoved = false;
-    private bool slot1check = true;
+    private bool slot1check = false;
     private bool slot2check = false;
     private bool slot3check = false;
     private bool slot4check = false;

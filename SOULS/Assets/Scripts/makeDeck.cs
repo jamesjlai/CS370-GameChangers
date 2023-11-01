@@ -49,7 +49,8 @@ public class makeDeck : MonoBehaviour{ // make deck class, instatiate for decks 
     {
         string path = Path.Combine(Directory.GetCurrentDirectory(), "Assets/Scripts/Cards/Cards.json");
         string jsonData = File.ReadAllText(path);
-        this.card_pool = JsonConvert.DeserializeObject<List<Card>>(jsonData);
+        List<Card> cards = JsonConvert.DeserializeObject<List<Card>>(jsonData);
+        this.card_pool = cards;
     }
 
     public static Card DrawRandom(List<Card> pool)

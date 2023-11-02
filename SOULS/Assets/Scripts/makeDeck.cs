@@ -10,30 +10,6 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-//public class Card : MonoBehaviour { 
-
-//    [JsonProperty("cardName")]
-//    public string CardName { get; set; }
-//    [JsonProperty("description")]
-//    public string Description { get; set; }
-//    [JsonProperty("attack")]
-//    public string Attack { get; set; }
-//    [JsonProperty("health")]
-//    public string Health { get; set; }
-//    [JsonProperty("skill")]
-//    public string ?Skill { get; set; }
-//    [JsonProperty("texture")]
-//    public string Texture { get; set; }
-//    [JsonProperty("borderColor")]
-//    public string ?BorderColor { get; set; }
-//    [JsonProperty("probability")]
-//    public string Probability { get; set; }
-
-//}
-//public class Root : MonoBehaviour
-//{
-//    public List<Card>? cards {get; set; }
-//}
 public class Card : ScriptableObject
 {
     public string cardName;
@@ -50,8 +26,11 @@ public class makeDeck : MonoBehaviour {
 
     public Dictionary<string, Stack<Card>> Decks;
     public Dictionary<string, List<Card>> Hands;
-    //public List<Card> test;
     public List<Card> Cards;
+    public List<Card> d1test;
+    public List<Card> d2test;
+    public List<Card> h1test;
+    public List<Card> h2test;
 
 
     public void GameStart()
@@ -60,12 +39,57 @@ public class makeDeck : MonoBehaviour {
         Hands = new(0);
         Decks.Add("deck1", CreateRandomDeck(25));
         Decks.Add("deck2", CreateRandomDeck(25));
-        Hands.Add("hand1", new List<Card>());
-        Hands.Add("hand2", new List<Card>());
+        //Hands.Add("hand1", new List<Card>());
+        //Hands.Add("hand2", new List<Card>());
+        //Draw("hand1", "deck1", 4);
+        //Draw("hand2", "deck2", 4);
+        //h1test = Hands["hand1"];
+        //h2test = Hands["hand2"];
 
-        Draw("hand1", "deck1", 4);
-        Draw("hand2", "deck2", 4);
+        List<Card> s1 = new();
+        List<Card> s2 = new();
+        for (int i = 0; i < Decks["deck1"].Count; i++)
+        {
+            s1.Add(Decks["deck1"].Pop());
+        }
+        for (int i = 0; i < Decks["deck2"].Count; i++)
+        {
+            s2.Add(Decks["deck2"].Pop());
+        }
+        d1test = s1;
+        d2test = s2;
     }
+
+    //[System.Serializable]
+    //public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
+    //{
+    //    [SerializeField] private List<TKey> keys = new List<TKey>();
+    //    [SerializeField] private List<TValue> values = new List<TValue>();
+
+    //    // save the dictionary to lists
+    //    public void OnBeforeSerialize()
+    //    {
+    //        keys.Clear();
+    //        values.Clear();
+    //        foreach (KeyValuePair<TKey, TValue> pair in this)
+    //        {
+    //            keys.Add(pair.Key);
+    //            values.Add(pair.Value);
+    //        }
+    //    }
+
+    //    // load dictionary from lists
+    //    public void OnAfterDeserialize()
+    //    {
+    //        this.Clear();
+
+    //        if (keys.Count != values.Count)
+    //            throw new System.Exception("there are " + keys.Count + " keys and " + values.Count + " values after deserialization. Make sure that both key and value types are serializable.");
+
+    //        for (int i = 0; i < keys.Count; i++)
+    //            this.Add(keys[i], values[i]);
+    //    }
+    //}
 
     void Awake()
     {
@@ -131,19 +155,41 @@ public class makeDeck : MonoBehaviour {
     public Card DrawRandom()
     {
         var rand = new System.Random();
-        return Cards[rand.Next(0,5)];
-        
+        int r = rand.Next(0, 5);
+        Card temp = ScriptableObject.CreateInstance<Card>();
+        temp.cardName = Cards[r].cardName;
+        temp.description = Cards[r].description;
+        temp.attack = Cards[r].attack;
+        temp.health = Cards[r].health;
+        temp.skill = Cards[r].skill;
+        temp.texture = Cards[r].texture;
+        temp.borderColor = Cards[r].borderColor;
+        temp.probability = Cards[r].probability;
+
+        return temp;
+
     }
 
     public Stack<Card> CreateRandomDeck(int numberOfCards)
     {
-        Stack<Card> temp = new Stack<Card>();
+        Stack<Card> st = new Stack<Card>();
 
         for (int i = 0; i < numberOfCards; i++)
         {
-            temp.Push(DrawRandom());
+            var rand = new System.Random();
+            int r = rand.Next(0, 5);
+            Card temp = ScriptableObject.CreateInstance<Card>();
+            temp.cardName = Cards[r].cardName;
+            temp.description = Cards[r].description;
+            temp.attack = Cards[r].attack;
+            temp.health = Cards[r].health;
+            temp.skill = Cards[r].skill;
+            temp.texture = Cards[r].texture;
+            temp.borderColor = Cards[r].borderColor;
+            temp.probability = Cards[r].probability;
+            st.Push(temp);
         }
-        Stack<Card> deck = temp;
+        Stack<Card> deck = st;
         return deck;
     }
 
@@ -162,84 +208,3 @@ public class makeDeck : MonoBehaviour {
 
 }
 
-
-
-//public void GameStart() {
-//    Dictionary<string, Stack<Card>> decks = new();
-//    decks.Add("deck1", CreateRandomDeck(25));
-//    decks.Add("deck2", CreateRandomDeck(25));
-//    Decks = decks;
-//    Dictionary<string, List<Card>> hands = new();
-//    hands.Add("hand1", new List<Card>());
-//    hands.Add("hand2", new List<Card>());
-//    Hands = hands;
-//    Draw("hand1", "deck1", 4);
-//    Draw("hand2", "deck2", 4);
-//}
-
-//void Awake()
-//{
-//    List<Card> cards = new List<Card>();
-
-//    cards.Add(new Card
-//    {
-//        cardName = "Carla the Software Developer",
-//        description = "A skilled programmer who develops software applications.",
-//        attack = 3,
-//        health = 4,
-//        skill = null,
-//        texture = 1,
-//        borderColor = null,
-//        probability = 1
-//    });
-
-//    cards.Add(new Card
-//    {
-//        cardName = "Samuel the Doctor",
-//        description = "A medical professional who diagnoses and treats illnesses.",
-//        attack = 2,
-//        health = 6,
-//        skill = null,
-//        texture = 2,
-//        borderColor = null,
-//        probability = 1
-//    });
-
-//    cards.Add(new Card
-//    {
-//        cardName = "Eric the Architect",
-//        description = "A professional who designs buildings and structures.",
-//        attack = 2,
-//        health = 3,
-//        skill = null,
-//        texture = 3,
-//        borderColor = null,
-//        probability = 1
-//    });
-
-//    cards.Add(new Card
-//    {
-//        cardName = "Jason the Chef",
-//        description = "A culinary expert who creates delicious dishes.",
-//        attack = 5,
-//        health = 2,
-//        skill = null,
-//        texture = 4,
-//        borderColor = null,
-//        probability = 1
-//    });
-
-//    cards.Add(new Card
-//    {
-//        cardName = "Nikki the Lawyer",
-//        description = "A legal expert who provides advice and represents clients in court.",
-//        attack = 3,
-//        health = 4,
-//        skill = null,
-//        texture = 5,
-//        borderColor = null,
-//        probability = 1
-//    });
-
-//    Cards = cards;
-//}

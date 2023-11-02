@@ -72,10 +72,10 @@ public class makeDeck : MonoBehaviour {
         //List<Card> cards = ScriptableObject.CreateInstance<List<Card>>();
         Cards = new(0);
         Card c1 = ScriptableObject.CreateInstance<Card>();
-        c1.cardName = "Carla the Software Developer";
+        c1.cardName = "Bob the Butcher";
         c1.description = "A skilled programmer who develops software applications.";
-        c1.attack = 3;
-        c1.health = 4;
+        c1.attack = 5;
+        c1.health = 1;
         c1.skill = null;
         c1.texture = 1;
         c1.borderColor = null;
@@ -83,9 +83,9 @@ public class makeDeck : MonoBehaviour {
         Cards.Add(c1);
 
         Card c2 = ScriptableObject.CreateInstance<Card>();
-        c2.cardName = "Carla the Software Developer";
+        c2.cardName = "Lenny the Lawyer";
         c2.description = "A skilled programmer who develops software applications.";
-        c2.attack = 3;
+        c2.attack = 2;
         c2.health = 4;
         c2.skill = null;
         c2.texture = 1;
@@ -94,10 +94,10 @@ public class makeDeck : MonoBehaviour {
         Cards.Add(c2);
 
         Card c3 = ScriptableObject.CreateInstance<Card>();
-        c3.cardName = "Carla the Software Developer";
+        c3.cardName = "Misha the Mechanic";
         c3.description = "A skilled programmer who develops software applications.";
         c3.attack = 3;
-        c3.health = 4;
+        c3.health = 2;
         c3.skill = null;
         c3.texture = 1;
         c3.borderColor = null;
@@ -105,10 +105,10 @@ public class makeDeck : MonoBehaviour {
         Cards.Add(c3);
 
         Card c4 = ScriptableObject.CreateInstance<Card>();
-        c4.cardName = "Carla the Software Developer";
+        c4.cardName = "Natalie the Nurse";
         c4.description = "A skilled programmer who develops software applications.";
-        c4.attack = 3;
-        c4.health = 4;
+        c4.attack = 2;
+        c4.health = 5;
         c4.skill = null;
         c4.texture = 1;
         c4.borderColor = null;
@@ -116,10 +116,10 @@ public class makeDeck : MonoBehaviour {
         Cards.Add(c4);
 
         Card c5 = ScriptableObject.CreateInstance<Card>();
-        c5.cardName = "Carla the Software Developer";
+        c5.cardName = "Paul the Policeman";
         c5.description = "A skilled programmer who develops software applications.";
         c5.attack = 3;
-        c5.health = 4;
+        c5.health = 3;
         c5.skill = null;
         c5.texture = 1;
         c5.borderColor = null;

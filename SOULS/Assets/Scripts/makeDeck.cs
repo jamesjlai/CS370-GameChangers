@@ -56,14 +56,13 @@ public class makeDeck : MonoBehaviour {
 
     public void GameStart()
     {
-        //Dictionary<string, Stack<Card>> decks = new();
-        //decks.Add("deck1", CreateRandomDeck(25));
-        //decks.Add("deck2", CreateRandomDeck(25));
-        //Decks = decks;
-        //Dictionary<string, List<Card>> hands = new();
-        //hands.Add("hand1", new List<Card>());
-        //hands.Add("hand2", new List<Card>());
-        //Hands = hands;
+        Decks = new(0);
+        Hands = new(0);
+        Decks.Add("deck1", CreateRandomDeck(25));
+        Decks.Add("deck2", CreateRandomDeck(25));
+        Hands.Add("hand1", new List<Card>());
+        Hands.Add("hand2", new List<Card>());
+
         Draw("hand1", "deck1", 4);
         Draw("hand2", "deck2", 4);
     }
@@ -72,8 +71,6 @@ public class makeDeck : MonoBehaviour {
     {
         //List<Card> cards = ScriptableObject.CreateInstance<List<Card>>();
         Cards = new(0);
-        Decks = new();
-        Hands = new();
         Card c1 = ScriptableObject.CreateInstance<Card>();
         c1.cardName = "Carla the Software Developer";
         c1.description = "A skilled programmer who develops software applications.";
@@ -128,34 +125,25 @@ public class makeDeck : MonoBehaviour {
         c5.borderColor = null;
         c5.probability = 1;
         Cards.Add(c5);
-
-
-        Dictionary<string, Stack<Card>> decks = new();
-        Decks.Add("deck1", CreateRandomDeck(25));
-        Decks.Add("deck2", CreateRandomDeck(25));
-        
-        Dictionary<string, List<Card>> hands = new();
-        Hands.Add("hand1", new List<Card>());
-        Hands.Add("hand2", new List<Card>());
-
+       
     }
 
     public Card DrawRandom()
     {
         var rand = new System.Random();
-        return Cards[rand.Next(Cards.Count)];
+        return Cards[rand.Next(0,5)];
         
     }
 
     public Stack<Card> CreateRandomDeck(int numberOfCards)
     {
-        Stack<Card> deck = new Stack<Card>();
+        Stack<Card> temp = new Stack<Card>();
 
         for (int i = 0; i < numberOfCards; i++)
         {
-            deck.Push(DrawRandom());
+            temp.Push(DrawRandom());
         }
-        Stack<Card> temp = deck;
+        Stack<Card> deck = temp;
         return deck;
     }
 

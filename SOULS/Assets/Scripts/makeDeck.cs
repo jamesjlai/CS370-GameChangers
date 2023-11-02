@@ -6,70 +6,148 @@ using System.Reflection;
 using System.Threading;
 using System.IO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Card : MonoBehaviour { // card class for card variables
-    public string CardName { get; set; }
-    public string Description { get; set; }
-    public string Attack { get; set; }
-    public string Health { get; set; }
-    public string Skill { get; set; }
-    public string Texture { get; set; }
-    public string BorderColor { get; set; }
-    public string Probability { get; set; }
+//public class Card : MonoBehaviour { 
 
+//    [JsonProperty("cardName")]
+//    public string CardName { get; set; }
+//    [JsonProperty("description")]
+//    public string Description { get; set; }
+//    [JsonProperty("attack")]
+//    public string Attack { get; set; }
+//    [JsonProperty("health")]
+//    public string Health { get; set; }
+//    [JsonProperty("skill")]
+//    public string ?Skill { get; set; }
+//    [JsonProperty("texture")]
+//    public string Texture { get; set; }
+//    [JsonProperty("borderColor")]
+//    public string ?BorderColor { get; set; }
+//    [JsonProperty("probability")]
+//    public string Probability { get; set; }
 
-    public override string ToString()
-    {
-        return $"{CardName} - {Description} (Attack: {Attack}, Health: {Health}, Skill: {Skill ?? "None"}, Texture: {Texture}, BorderColor: {BorderColor ?? "None"}, Probability: {Probability})";
-    }
+//}
+//public class Root : MonoBehaviour
+//{
+//    public List<Card>? cards {get; set; }
+//}
+public class Card : ScriptableObject
+{
+    public string cardName;
+    public string description;
+    public int attack;
+    public int health;
+    public string? skill;
+    public int texture;
+    public string? borderColor;
+    public int probability;
 }
 
-public class makeDeck : MonoBehaviour{ // make deck class, instatiate for decks and card_pool
+public class makeDeck : MonoBehaviour {
 
-    public Dictionary<string, Stack<Card>> decks = new();
-    public Dictionary<string, List<Card>> hands = new();
-    public List<Card> card_pool = new();
-  
-    public void GameStart(){
-        DeserializeCards();
-        decks.Add("deck1", CreateRandomDeck(card_pool, 25));
-        decks.Add("deck2", CreateRandomDeck(card_pool, 25));
-        hands.Add("hand1", new List<Card>());
-        hands.Add("hand2", new List<Card>());
+    public Dictionary<string, Stack<Card>> Decks;
+    public Dictionary<string, List<Card>> Hands;
+    //public List<Card> test;
+    public List<Card> Cards;
+
+
+    public void GameStart()
+    {
+        //Dictionary<string, Stack<Card>> decks = new();
+        //decks.Add("deck1", CreateRandomDeck(25));
+        //decks.Add("deck2", CreateRandomDeck(25));
+        //Decks = decks;
+        //Dictionary<string, List<Card>> hands = new();
+        //hands.Add("hand1", new List<Card>());
+        //hands.Add("hand2", new List<Card>());
+        //Hands = hands;
         Draw("hand1", "deck1", 4);
         Draw("hand2", "deck2", 4);
     }
 
-    public void DeserializeCards()
+    void Awake()
     {
-        string path = Path.Combine(Directory.GetCurrentDirectory(), "Assets/Scripts/Cards/Cards.json");
-        if (System.IO.File.Exists(path))
-        {
-            string jsonData = File.ReadAllText(path);
-            List<Card> cards = JsonConvert.DeserializeObject<List<Card>>(jsonData);
-            card_pool = cards;
-        }
-        else throw new ArgumentException("path doesnt work");
+        //List<Card> cards = ScriptableObject.CreateInstance<List<Card>>();
+        Cards = new(0);
+        Decks = new();
+        Hands = new();
+        Card c1 = ScriptableObject.CreateInstance<Card>();
+        c1.cardName = "Carla the Software Developer";
+        c1.description = "A skilled programmer who develops software applications.";
+        c1.attack = 3;
+        c1.health = 4;
+        c1.skill = null;
+        c1.texture = 1;
+        c1.borderColor = null;
+        c1.probability = 1;
+        Cards.Add(c1);
+
+        Card c2 = ScriptableObject.CreateInstance<Card>();
+        c2.cardName = "Carla the Software Developer";
+        c2.description = "A skilled programmer who develops software applications.";
+        c2.attack = 3;
+        c2.health = 4;
+        c2.skill = null;
+        c2.texture = 1;
+        c2.borderColor = null;
+        c2.probability = 1;
+        Cards.Add(c2);
+
+        Card c3 = ScriptableObject.CreateInstance<Card>();
+        c3.cardName = "Carla the Software Developer";
+        c3.description = "A skilled programmer who develops software applications.";
+        c3.attack = 3;
+        c3.health = 4;
+        c3.skill = null;
+        c3.texture = 1;
+        c3.borderColor = null;
+        c3.probability = 1;
+        Cards.Add(c3);
+
+        Card c4 = ScriptableObject.CreateInstance<Card>();
+        c4.cardName = "Carla the Software Developer";
+        c4.description = "A skilled programmer who develops software applications.";
+        c4.attack = 3;
+        c4.health = 4;
+        c4.skill = null;
+        c4.texture = 1;
+        c4.borderColor = null;
+        c4.probability = 1;
+        Cards.Add(c4);
+
+        Card c5 = ScriptableObject.CreateInstance<Card>();
+        c5.cardName = "Carla the Software Developer";
+        c5.description = "A skilled programmer who develops software applications.";
+        c5.attack = 3;
+        c5.health = 4;
+        c5.skill = null;
+        c5.texture = 1;
+        c5.borderColor = null;
+        c5.probability = 1;
+        Cards.Add(c5);
+
+
+        Dictionary<string, Stack<Card>> decks = new();
+        Decks.Add("deck1", CreateRandomDeck(25));
+        Decks.Add("deck2", CreateRandomDeck(25));
+        
+        Dictionary<string, List<Card>> hands = new();
+        Hands.Add("hand1", new List<Card>());
+        Hands.Add("hand2", new List<Card>());
+
     }
 
     public Card DrawRandom()
     {
         var rand = new System.Random();
-        bool isNullOrEmpty = card_pool?.Any() != true;
-        if (isNullOrEmpty)
-        {
-            Card newCard = gameObject.AddComponent(typeof(Card)) as Card;
-            return newCard;
-        }
-        else
-        {
-            return card_pool[rand.Next(card_pool.Count)];
-        }
+        return Cards[rand.Next(Cards.Count)];
+        
     }
 
-    public Stack<Card> CreateRandomDeck(List<Card> pool, int numberOfCards)
+    public Stack<Card> CreateRandomDeck(int numberOfCards)
     {
         Stack<Card> deck = new Stack<Card>();
 
@@ -82,16 +160,98 @@ public class makeDeck : MonoBehaviour{ // make deck class, instatiate for decks 
     }
 
     public void Draw(string hand, string deck, int draw_amount){
-        if (decks[deck].Peek() == null) return;
-        while (decks[deck].Peek() != null && draw_amount > 0) {
-            hands[hand].Add(decks[deck].Pop());
+        if (Decks[deck].Peek() == null) return;
+        while (Decks[deck].Peek() != null && draw_amount > 0) {
+            Hands[hand].Add(Decks[deck].Pop());
             draw_amount--;
         }
     }
 
     public void Discard(string hand, Card card) {
-        if (hands[hand].Contains(card) == false) return;
-        hands[hand].Remove(card);
+        if (Hands[hand].Contains(card) == false) return;
+        Hands[hand].Remove(card);
     }
 
 }
+
+
+
+//public void GameStart() {
+//    Dictionary<string, Stack<Card>> decks = new();
+//    decks.Add("deck1", CreateRandomDeck(25));
+//    decks.Add("deck2", CreateRandomDeck(25));
+//    Decks = decks;
+//    Dictionary<string, List<Card>> hands = new();
+//    hands.Add("hand1", new List<Card>());
+//    hands.Add("hand2", new List<Card>());
+//    Hands = hands;
+//    Draw("hand1", "deck1", 4);
+//    Draw("hand2", "deck2", 4);
+//}
+
+//void Awake()
+//{
+//    List<Card> cards = new List<Card>();
+
+//    cards.Add(new Card
+//    {
+//        cardName = "Carla the Software Developer",
+//        description = "A skilled programmer who develops software applications.",
+//        attack = 3,
+//        health = 4,
+//        skill = null,
+//        texture = 1,
+//        borderColor = null,
+//        probability = 1
+//    });
+
+//    cards.Add(new Card
+//    {
+//        cardName = "Samuel the Doctor",
+//        description = "A medical professional who diagnoses and treats illnesses.",
+//        attack = 2,
+//        health = 6,
+//        skill = null,
+//        texture = 2,
+//        borderColor = null,
+//        probability = 1
+//    });
+
+//    cards.Add(new Card
+//    {
+//        cardName = "Eric the Architect",
+//        description = "A professional who designs buildings and structures.",
+//        attack = 2,
+//        health = 3,
+//        skill = null,
+//        texture = 3,
+//        borderColor = null,
+//        probability = 1
+//    });
+
+//    cards.Add(new Card
+//    {
+//        cardName = "Jason the Chef",
+//        description = "A culinary expert who creates delicious dishes.",
+//        attack = 5,
+//        health = 2,
+//        skill = null,
+//        texture = 4,
+//        borderColor = null,
+//        probability = 1
+//    });
+
+//    cards.Add(new Card
+//    {
+//        cardName = "Nikki the Lawyer",
+//        description = "A legal expert who provides advice and represents clients in court.",
+//        attack = 3,
+//        health = 4,
+//        skill = null,
+//        texture = 5,
+//        borderColor = null,
+//        probability = 1
+//    });
+
+//    Cards = cards;
+//}

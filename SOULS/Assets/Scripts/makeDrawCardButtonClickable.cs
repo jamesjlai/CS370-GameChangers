@@ -27,7 +27,7 @@ public class makeDrawCardButtonClickable : MonoBehaviour
                 makeDeck.Draw("hand1", "deck1", 1); //trigger event in separate script
                 Debug.Log("hi");
                 
-                for (int i = 0; i > makeDeck.hands["hand1"].Count; i++) {
+                for (int i = 0; i > makeDeck.Hands["hand1"].Count; i++) {
                     //Debug.Log((makeDeck.hands["hand1"][i]).ToString());
                 }
             }

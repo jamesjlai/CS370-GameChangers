@@ -27,10 +27,10 @@ public class makeDeck : MonoBehaviour {
     public Dictionary<string, Stack<Card>> Decks;
     public Dictionary<string, List<Card>> Hands;
     public List<Card> Cards;
-    public List<Card> d1test;
-    public List<Card> d2test;
-    public List<Card> h1test;
-    public List<Card> h2test;
+    //public List<Card> d1test;
+    //public List<Card> d2test;
+    //public List<Card> h1test;
+    //public List<Card> h2test;
 
 
     public void GameStart()
@@ -39,61 +39,16 @@ public class makeDeck : MonoBehaviour {
         Hands = new(0);
         Decks.Add("deck1", CreateRandomDeck(25));
         Decks.Add("deck2", CreateRandomDeck(25));
-        //Hands.Add("hand1", new List<Card>());
-        //Hands.Add("hand2", new List<Card>());
-        //Draw("hand1", "deck1", 4);
-        //Draw("hand2", "deck2", 4);
-        //h1test = Hands["hand1"];
-        //h2test = Hands["hand2"];
-
-        List<Card> s1 = new();
-        List<Card> s2 = new();
-        for (int i = 0; i < Decks["deck1"].Count; i++)
-        {
-            s1.Add(Decks["deck1"].Pop());
-        }
-        for (int i = 0; i < Decks["deck2"].Count; i++)
-        {
-            s2.Add(Decks["deck2"].Pop());
-        }
-        d1test = s1;
-        d2test = s2;
+        Hands.Add("hand1", new List<Card>());
+        Hands.Add("hand2", new List<Card>());
+        Draw("hand1", "deck1", 4);
+        Draw("hand2", "deck2", 4);
+        
     }
-
-    //[System.Serializable]
-    //public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
-    //{
-    //    [SerializeField] private List<TKey> keys = new List<TKey>();
-    //    [SerializeField] private List<TValue> values = new List<TValue>();
-
-    //    // save the dictionary to lists
-    //    public void OnBeforeSerialize()
-    //    {
-    //        keys.Clear();
-    //        values.Clear();
-    //        foreach (KeyValuePair<TKey, TValue> pair in this)
-    //        {
-    //            keys.Add(pair.Key);
-    //            values.Add(pair.Value);
-    //        }
-    //    }
-
-    //    // load dictionary from lists
-    //    public void OnAfterDeserialize()
-    //    {
-    //        this.Clear();
-
-    //        if (keys.Count != values.Count)
-    //            throw new System.Exception("there are " + keys.Count + " keys and " + values.Count + " values after deserialization. Make sure that both key and value types are serializable.");
-
-    //        for (int i = 0; i < keys.Count; i++)
-    //            this.Add(keys[i], values[i]);
-    //    }
-    //}
 
     void Awake()
     {
-        //List<Card> cards = ScriptableObject.CreateInstance<List<Card>>();
+        
         Cards = new(0);
         Card c1 = ScriptableObject.CreateInstance<Card>();
         c1.cardName = "Bob the Butcher";
@@ -201,9 +156,10 @@ public class makeDeck : MonoBehaviour {
         }
     }
 
-    public void Discard(string hand, Card card) {
-        if (Hands[hand].Contains(card) == false) return;
-        Hands[hand].Remove(card);
+    public void Discard(string hand, int index) {
+        
+        if (index +1 > Hands[hand].Count) return;
+        Hands[hand].RemoveAt(index);
     }
 
 }

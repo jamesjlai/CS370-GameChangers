@@ -43,7 +43,6 @@ public class makeDeck : MonoBehaviour {
         Hands.Add("hand2", new List<Card>());
         Draw("hand1", "deck1", 4);
         Draw("hand2", "deck2", 4);
-        
     }
 
     void Awake()

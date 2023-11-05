@@ -26,10 +26,12 @@ public class makeDrawCardButtonClickable : MonoBehaviour
             if(Physics.Raycast(ray,out hit) && hit.collider.gameObject == gameObject) { //if click on button
                 makeDeck.Draw("hand1", "deck1", 1); //trigger event in separate script
                 Debug.Log("hi");
+
+                //for (int i = 0; i > makeDeck.Hands["hand1"].Count; i++) {
+                //    Debug.Log((makeDeck.Hands["hand1"][i]).cardName);}
+                foreach (Card c in makeDeck.Hands["hand1"]) Debug.Log(c.cardName);
+
                 
-                for (int i = 0; i > makeDeck.Hands["hand1"].Count; i++) {
-                    Debug.Log((makeDeck.Hands["hand1"][i]).cardName);
-                }
             }
         }
     }

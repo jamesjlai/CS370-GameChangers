@@ -6,14 +6,14 @@ using UnityEngine.Events; //added to trigger events
 
 public class makeEndTurnButtonClickable : MonoBehaviour
 {
-    //public UnityEvent unityEvent = new UnityEvent(); //variable to call unity events
+    public UnityEvent unityEvent = new UnityEvent(); //variable to call unity events
     public GameObject button; //variable for button object
     public turnManager turnManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        turnManager = GameObject.Find("turnManager").GetComponent<turnManager>();
+        turnManager = GameObject.Find("Turn Manager").GetComponent<turnManager>();
         button = this.gameObject; //setting unity object as button
     }
 

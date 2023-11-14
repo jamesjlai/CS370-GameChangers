@@ -1,21 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
+//from /cards/Deck.cs import 
 
 public class turnManager : MonoBehaviour
 {
     public bool firstTurn = true;
-    
+
     //make sure player cannot end inactive phase
     public bool isPlayerTurn = false;
     public bool isPlayerAttack = false;
     public bool isOpponentTurn = false;
     public bool isOpponentAttack = false;
-    
+
     public GameObject mainCamera;
     public GameObject tableCamera;
+    public Slider playerSlider;
+    public Slider opponentSlider;
+    public int playerHealth = 100;
+    public int opponentHealth = 100;
 
     // Start is called before the first frame update
     void Start()
@@ -29,60 +34,52 @@ public class turnManager : MonoBehaviour
         //draw card X4
         isPlayerTurn = true;
         playerTurn();
+        playerSlider.value=playerHealth;
+        opponentSlider.value=opponentHealth;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("EndTurn")) 
+        if (Input.GetButtonDown("EndTurn"))
         {
             endTurn();
         }
-        if (Input.GetButtonDown("EndAttack")) 
+        if (Input.GetButtonDown("EndAttack"))
         {
             endAttack();
         }
-        if (Input.GetButtonDown("Esc")) 
-        {
-            winGame();
-        }
-        if (Input.GetButtonDown("Lose")) 
-        {
-            loseGame();
-        }
     }
 
-    public void endTurn() {
-        if (isPlayerTurn) {
+    public void endTurn()
+    {
+        if (isPlayerTurn)
+        {
             isPlayerTurn = false;
-                if (firstTurn) {
-                    firstTurn = false;
-                    Debug.Log("first turn!");
-                    opponentFirstTurn();
-                }
-                else {
-                    playerAttackPhase();
-                }
+            if (firstTurn)
+            {
+                firstTurn = false;
+                Debug.Log("first turn!");
+                opponentFirstTurn();
+            }
+            else
+            {
+                playerAttackPhase();
+            }
         }
     }
 
-    public void endAttack() {
-        if (isPlayerAttack) {
+    public void endAttack()
+    {
+        if (isPlayerAttack)
+        {
             isPlayerAttack = false;
             opponentTurn();
         }
     }
 
-    public void winGame() {
-        //put win game music here
-        SceneManager.LoadScene("WinGame", LoadSceneMode.Single);
-    }
-
-    public void loseGame() {
-        SceneManager.LoadScene("LoseGame", LoadSceneMode.Single);
-    }
-
-    void playerTurn() {
+    public void playerTurn()
+    {
         isPlayerTurn = true;
         //enable draw card button
         //enable end turn button
@@ -91,7 +88,8 @@ public class turnManager : MonoBehaviour
         Debug.Log("player's turn--click z!");
     }
 
-    void playerAttackPhase() {
+    void playerAttackPhase()
+    {
         isPlayerAttack = true;
         //enable card selection/attacking
         //enable end phase button 
@@ -100,7 +98,8 @@ public class turnManager : MonoBehaviour
         Debug.Log("attack phase--click x!");
     }
 
-    void opponentFirstTurn() {
+    void opponentFirstTurn()
+    {
         isOpponentTurn = true;
         //opponent plays cards
         //opponent DOES NOT have an attack phase
@@ -111,7 +110,8 @@ public class turnManager : MonoBehaviour
         playerTurn();
     }
 
-    void opponentTurn() {
+    void opponentTurn()
+    {
         isOpponentTurn = true;
         //opponent plays cards
         mainCamera.GetComponent<Camera>().enabled = true;
@@ -122,7 +122,8 @@ public class turnManager : MonoBehaviour
         playerTurn();
     }
 
-    void opponentAttackPhase() {
+    void opponentAttackPhase()
+    {
         isOpponentAttack = true;
         //opponent attacks
         mainCamera.GetComponent<Camera>().enabled = false;
@@ -130,5 +131,28 @@ public class turnManager : MonoBehaviour
         Debug.Log("opponent's attack phase");
         isOpponentAttack = false;
     }
+    public void DecreasePlayerHealth(int damage)
+    {   
+        playerHealth -= damage;
+        playerSlider.value=playerHealth;
+
+        // Additional logic, e.g., check for game over conditions
+        if (playerHealth <= 0)
+        {
+            // Player has lost, handle game over logic
+        }
+    }
+    public void DecreaseOpponentHealth(int damage)
+    {
+        opponentHealth -= damage;
+        opponentSlider.value=opponentHealth;
+
+        // Additional logic, e.g., check for game over conditions
+        if (opponentHealth <= 0)
+        {
+            // Opponent has lost, handle game over logic
+        }
+    }
+
 
 }

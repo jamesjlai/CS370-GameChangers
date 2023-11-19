@@ -140,8 +140,30 @@ public class makeDeck : MonoBehaviour {
         for (int i = 0; i < numberOfCards; i++)
         {
             var rand = new System.Random();
-            int r = rand.Next(0, 5);
+            double d = rand.NextDouble();
             Card temp = ScriptableObject.CreateInstance<Card>();
+            int r;
+            if (d < 0.05)
+            {
+                r = 0;
+            }
+            else if (d < 0.1)
+            {
+                r = 1;
+            }
+            else if (d < 0.4)
+            {
+                r = 2;
+            }
+            else if (d < 0.7)
+            {
+                r = 3;
+            }
+            else
+            {
+                r = 4;
+            }
+
             temp.cardName = Cards[r].cardName;
             temp.id = Cards[r].id;
             temp.attack = Cards[r].attack;

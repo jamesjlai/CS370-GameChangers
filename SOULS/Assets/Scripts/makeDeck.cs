@@ -108,8 +108,33 @@ public class makeDeck : MonoBehaviour {
         c5.probability = 1;
         c5.idObj = 0;
         Cards.Add(c5);
-       
+
+        Card c6 = ScriptableObject.CreateInstance<Card>();
+        c6.cardName = "Taylor the Teacher";
+        c6.id = 6;
+        c6.attack = 2;
+        c6.health = 4;
+        c6.skill = null;
+        c6.texture = 1;
+        c6.borderColor = null;
+        c6.probability = 1;
+        c6.idObj = 0;
+        Cards.Add(c6);
+
+        Card c7 = ScriptableObject.CreateInstance<Card>();
+        c7.cardName = "Jerry the Judge";
+        c7.id = 7;
+        c7.attack = 4;
+        c7.health = 3;
+        c7.skill = null;
+        c7.texture = 1;
+        c7.borderColor = null;
+        c7.probability = 1;
+        c7.idObj = 0;
+        Cards.Add(c7);
+
     }
+    
 
     public Card DrawRandom()
     {
@@ -143,15 +168,15 @@ public class makeDeck : MonoBehaviour {
             double d = rand.NextDouble();
             Card temp = ScriptableObject.CreateInstance<Card>();
             int r;
-            if (d < 0.05)
+            if (d < 0.2)
             {
                 r = 0;
             }
-            else if (d < 0.1)
+            else if (d < 0.4)
             {
                 r = 1;
             }
-            else if (d < 0.4)
+            else if (d < 0.5)
             {
                 r = 2;
             }
@@ -159,9 +184,16 @@ public class makeDeck : MonoBehaviour {
             {
                 r = 3;
             }
-            else
+            else if (d < 0.8)
             {
                 r = 4;
+            }
+            else if (d < 0.9) {
+                r = 5;
+            } 
+            else
+            {
+                r = 6;
             }
 
             temp.cardName = Cards[r].cardName;

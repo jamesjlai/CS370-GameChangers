@@ -6,15 +6,14 @@ TagManager:
   tags:
   - endTurn
   - turnManager
-  - Computer
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Comp
+  - 
   - Water
   - UI
-  - Play
+  - 
   - 
   - 
   - 

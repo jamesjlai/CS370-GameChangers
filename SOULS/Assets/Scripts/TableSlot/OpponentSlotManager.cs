@@ -10,6 +10,8 @@ public class OpponentSlotManager : MonoBehaviour
     public Transform slot10;
     public Transform slot11;
     public Transform slot12;
+    public cardTracker cardTracker;
+    public makeDeck makeDeck;
     private GameObject slot7Object = null;
     private GameObject slot8Object = null;
     private GameObject slot9Object = null;
@@ -35,17 +37,18 @@ public class OpponentSlotManager : MonoBehaviour
     private int opponentslot5 = 11;
     private int opponentslot6 = 12;
     */
-    
+
     // Start is called before the first frame update
     public void Start()
     {
-        
+        cardTracker = GameObject.Find("cardTracker").GetComponent<cardTracker>(); //load reference
+        makeDeck = GameObject.Find("makeDeck").GetComponent<makeDeck>();
     }
 
     // Update is called once per frame
     public void inputs()
     {
-        
+
     }
 
     public List<int> checkEmpty() //Return Empty Slots
@@ -79,6 +82,8 @@ public class OpponentSlotManager : MonoBehaviour
             Debug.Log("Moving from slot 10 to slot 7");
             StartCoroutine(MoveCard(slot10Object.transform, slot7));
             slot7Object = slot10Object;
+            cardTracker.clearSlot(10);
+            cardTracker.addToSlot(slot7Object, 7);
             slot10Object = null;
             slot7check = true;
             slot10check = false;
@@ -90,6 +95,8 @@ public class OpponentSlotManager : MonoBehaviour
             Debug.Log("Moving from slot 11 to slot 8");
             StartCoroutine(MoveCard(slot11Object.transform, slot8));
             slot8Object = slot11Object;
+            cardTracker.clearSlot(11);
+            cardTracker.addToSlot(slot8Object, 8);
             slot11Object = null;
             slot8check = true;
             slot11check = false;
@@ -101,13 +108,15 @@ public class OpponentSlotManager : MonoBehaviour
             Debug.Log("Moving from slot 12 to slot 9");
             StartCoroutine(MoveCard(slot12Object.transform, slot9));
             slot9Object = slot12Object;
+            cardTracker.clearSlot(12);
+            cardTracker.addToSlot(slot9Object, 9);
             slot12Object = null;
             slot9check = true;
             slot12check = false;
         }
     }
 
-    // Allow card objects to be moved from player's hand to opponent's hand
+    // Allow card objects to be moved from opponent's hand to opponent's slots
     public void moveByClick(GameObject cardObject, int num)
     {
         originalPosition = cardObject.transform.position;
@@ -122,54 +131,80 @@ public class OpponentSlotManager : MonoBehaviour
 
         if (num == 7 && !isMoving && !slot7check)
         {
+            //discard from deck in makeDeck
+            makeDeck.Discard("hand2", 0);
+
             StartCoroutine(MoveCard(cardObject.transform, slot7));
             slot7Object = cardObject;
+            cardTracker.addToSlot(cardObject, 7);
             slot7check = true;
             Debug.Log("Bottom left slot (7) card moved.");
         }
         else if (num == 8 && !isMoving && !slot8check)
         {
+            //discard from deck in makeDeck
+            makeDeck.Discard("hand2", 0);
+
             StartCoroutine(MoveCard(cardObject.transform, slot8));
             slot8Object = cardObject;
+            cardTracker.addToSlot(cardObject, 8);
             slot8check = true;
             Debug.Log("Bottom left slot (8) card moved.");
         }
         else if (num == 9 && !isMoving && !slot9check)
         {
+            //discard from deck in makeDeck
+            makeDeck.Discard("hand2", 0);
+
             StartCoroutine(MoveCard(cardObject.transform, slot9));
             slot9Object = cardObject;
+            cardTracker.addToSlot(cardObject, 9);
             slot9check = true;
             Debug.Log("Bottom left slot (9) card moved.");
         }
         else if (num == 10 && !isMoving && !slot10check)
         {
+            //discard from deck in makeDeck
+            makeDeck.Discard("hand2", 0);
+
             Debug.Log("Front Row Full check.");
             StartCoroutine(MoveCard(cardObject.transform, slot10));
             slot10Object = cardObject;
+            cardTracker.addToSlot(cardObject, 10);
             slot10check = true;
             Debug.Log("Bottom left slot (10) card moved.");
         }
         else if (num == 11 && !isMoving && !slot11check)
         {
+            //discard from deck in makeDeck
+            makeDeck.Discard("hand2", 0);
+
             StartCoroutine(MoveCard(cardObject.transform, slot11));
             slot11Object = cardObject;
+            cardTracker.addToSlot(cardObject, 11);
             slot11check = true;
             Debug.Log("Bottom left slot (11) card moved.");
         }
         else if (num == 12 && !isMoving && !slot12check)
         {
+            //discard from deck in makeDeck
+            makeDeck.Discard("hand2", 0);
+
             StartCoroutine(MoveCard(cardObject.transform, slot12));
             slot12Object = cardObject;
+            cardTracker.addToSlot(cardObject, 12);
             slot12check = true;
             Debug.Log("Bottom left slot (12) card moved.");
-        }else{
+        }
+        else
+        {
             Debug.Log("Error.");
-            Debug.Log("num ="+num+", isMoving= "+isMoving+ ", slot7check= "+slot7check);
-            Debug.Log("num ="+num+", isMoving= "+isMoving+ ", slot8check= "+slot8check);
-            Debug.Log("num ="+num+", isMoving= "+isMoving+ ", slot9check= "+slot9check);
-            Debug.Log("num ="+num+", isMoving= "+isMoving+ ", slot10check= "+slot10check+ ", frontrollfull"+frontrowfull);
-            Debug.Log("num ="+num+", isMoving= "+isMoving+ ", slot11check= "+slot11check);
-            Debug.Log("num ="+num+", isMoving= "+isMoving+ ", slot12check= "+slot12check);
+            Debug.Log("num =" + num + ", isMoving= " + isMoving + ", slot7check= " + slot7check);
+            Debug.Log("num =" + num + ", isMoving= " + isMoving + ", slot8check= " + slot8check);
+            Debug.Log("num =" + num + ", isMoving= " + isMoving + ", slot9check= " + slot9check);
+            Debug.Log("num =" + num + ", isMoving= " + isMoving + ", slot10check= " + slot10check + ", frontrollfull" + frontrowfull);
+            Debug.Log("num =" + num + ", isMoving= " + isMoving + ", slot11check= " + slot11check);
+            Debug.Log("num =" + num + ", isMoving= " + isMoving + ", slot12check= " + slot12check);
         }
     }
 
@@ -177,6 +212,11 @@ public class OpponentSlotManager : MonoBehaviour
     IEnumerator MoveCard(Transform cardObject, Transform newLocation)
     {
         isMoving = true;
+
+        // Store the original position and rotation before starting the movement
+        Vector3 originalPosition = cardObject.position;
+        Quaternion originalRotation = cardObject.rotation;
+
         Vector3 targetPosition = newLocation.position;
         Quaternion targetRotation = newLocation.rotation;
         float journeyLength = Vector3.Distance(originalPosition, targetPosition);
@@ -196,6 +236,7 @@ public class OpponentSlotManager : MonoBehaviour
             yield return null;
         }
 
+        // Ensure the card is precisely at the target position and rotation
         cardObject.position = targetPosition;
 
         if (interpolateRotation)
@@ -206,11 +247,46 @@ public class OpponentSlotManager : MonoBehaviour
         isMoving = false;
     }
 
+    public void cardterminate(int slotnum)
+    {
+        if (slotnum == 7)
+        {
+            slot7check = false;
+            slot7Object = null;
+        }
+        else if (slotnum == 8)
+        {
+            slot8check = false;
+            slot8Object = null;
+        }
+        else if (slotnum == 9)
+        {
+            slot9check = false;
+            slot9Object = null;
+        }
+        else if (slotnum == 10)
+        {
+            slot10check = false;
+            slot10Object = null;
+        }
+        else if (slotnum == 11)
+        {
+            slot11check = false;
+            slot11Object = null;
+
+        }
+        else if (slotnum == 12)
+        {
+            slot12check = false;
+            slot12Object = null;
+        }
+    }
+
     // Check if front row is full
     bool frontRowFullCheck(int n)
     {
         int num = n - 3;
-        if((slot7check && num == 7) || (slot8check && num == 8) || (slot9check && num == 9))
+        if ((slot7check && num == 7) || (slot8check && num == 8) || (slot9check && num == 9))
         {
             return true;
         }

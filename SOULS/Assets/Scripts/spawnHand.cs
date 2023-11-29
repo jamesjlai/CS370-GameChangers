@@ -18,6 +18,8 @@ public class spawnHand : MonoBehaviour
     public GameObject mechanic3;
     public GameObject nurse4;
     public GameObject police5;
+    public GameObject teacher6;
+    public GameObject judge7;
     
     //positions cards spawn in 
     private float horizontalPos = -0.8f;
@@ -36,12 +38,16 @@ public class spawnHand : MonoBehaviour
     private float cardLocDepth = -0.1f;
 
     //move on hover variables
-    public float upAmount = 0.2f;
-    public float speed = 0.5f;
-
-    private  Vector3 dnPos;
-    private  Vector3 upPos;
+    //public float upAmount = 0.2f;
+    //public float speed = 0.5f;
+    //private  Vector3 dnPos;
+    //private  Vector3 upPos;
     //private  Vector3 currPos;
+
+    //universal id
+    public int prefabID = 0;
+
+
     
     // Start is called before the first frame update
     void Start()
@@ -62,9 +68,11 @@ public class spawnHand : MonoBehaviour
     void Update()
     {
         //make sure number of cards in hand and space between them is up to date
-        cardsHeld = makeDeck.Hands["hand1"].Count;
-        cardLocHorizontal = boxDistance / cardsHeld;
-
+        if(makeDeck.Hands != null){
+            cardsHeld = makeDeck.Hands["hand1"].Count;
+            //Debug.Log(cardsHeld);
+            cardLocHorizontal = boxDistance / cardsHeld;
+        }
         /*
         //make cards hoverable
         //currently broken
@@ -128,7 +136,17 @@ public class spawnHand : MonoBehaviour
             else if (c.id == 5) {
                 cardObj = Instantiate(police5, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.Euler(-70f, 0.0f, 0.0f));
             }
-            cardTracker.addToHand(cardObj);
+            else if (c.id == 6) {
+                cardObj = Instantiate(teacher6, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.Euler(-70f, 0.0f, 0.0f));
+            }
+            else if (c.id == 7) {
+                cardObj = Instantiate(judge7, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.Euler(-70f, 0.0f, 0.0f));
+            }
+            cardObj.name = (prefabID.ToString());
+            prefabID += 1;
+            cardTracker.addToHand(cardObj); //adding game object to hand card tracker
+            //cardTracker.addHandScript(c);
+            cardTracker.addCardToDict(cardObj, c); //adding game and script object to card dictionary
 
             //doesn't work?
             //cardObj.AddComponent<moveOnHover>();

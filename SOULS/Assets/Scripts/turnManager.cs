@@ -24,6 +24,8 @@ public class turnManager : MonoBehaviour
     public spawnHand spawnHand;
     public OpponentSlotManager OpponentSlotManager;
     public PlayerSlotManager PlayerSlotManager;
+    public attackPhase attackPhase;
+    public cardTracker cardTracker;
     
     //positions cards spawn in (opponent)
         private float horizontalPos = -1.494676f;
@@ -36,6 +38,8 @@ public class turnManager : MonoBehaviour
     public GameObject mechanic3;
     public GameObject nurse4;
     public GameObject police5;
+    public GameObject teacher6;
+    public GameObject judge7;
 
     //list of empty opponent slots
     private List<int> emptySlots;
@@ -52,6 +56,8 @@ public class turnManager : MonoBehaviour
         spawnHand = GameObject.Find("spawnHand").GetComponent<spawnHand>();
         OpponentSlotManager = GameObject.Find("OpponentSlotManager").GetComponent<OpponentSlotManager>();
         PlayerSlotManager = GameObject.Find("PlayerSlotManager").GetComponent<PlayerSlotManager>();
+        attackPhase = GameObject.Find("attackPhase").GetComponent<attackPhase>();
+        cardTracker = GameObject.Find("cardTracker").GetComponent<cardTracker>();
         
         //draw cards
         makeDeck.GameStart();
@@ -70,10 +76,10 @@ public class turnManager : MonoBehaviour
         {
             endTurn();
         }
-        if (Input.GetButtonDown("EndAttack")) 
-        {
-            endAttack();
-        }
+        //if (Input.GetButtonDown("EndAttack")) 
+        //{
+        //    endAttack();
+        //}
         /*
         if (Input.GetButtonDown("Esc")) 
         {
@@ -162,11 +168,14 @@ public class turnManager : MonoBehaviour
         //this happens once before the attacking starts and once after
         PlayerSlotManager.moveForward();
 
-        //TO DO: cards attack each other
+        //cards attack each other
+        attackPhase.startAttack(true); //true means it is the player's attack phase
 
         PlayerSlotManager.moveForward();
 
-        Debug.Log("attack phase--click x!");
+        //end player attack phase
+        endAttack();
+        //Debug.Log("attack phase--click x!");
     }
 
     //alter the game state to the opponent's first turn
@@ -186,9 +195,12 @@ public class turnManager : MonoBehaviour
         int r2 = 0;
         int i = 0;
 
+        int length = makeDeck.Hands["hand2"].Count;
+
         //create and place card objects
-        foreach (Card c in makeDeck.Hands["hand2"]) {
+        while (length > 0) {
             if (i < r) {
+                Card c = makeDeck.Hands["hand2"][0];
                 GameObject cardObj = null;
                 
                 if (c.id == 1) {
@@ -206,6 +218,16 @@ public class turnManager : MonoBehaviour
                 else if (c.id == 5) {
                     cardObj = Instantiate(police5, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.identity);
                 }
+                else if (c.id == 6) {
+                    cardObj = Instantiate(teacher6, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.identity);
+                }
+                else if (c.id == 7) {
+                    cardObj = Instantiate(judge7, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.identity);
+                }
+                cardTracker.addCardToDict(cardObj, c); //add to tracker
+                
+                cardObj.name = (spawnHand.prefabID.ToString());
+                spawnHand.prefabID += 1;
 
                 //get list of empty slots
                 emptySlots = OpponentSlotManager.checkEmpty();
@@ -222,12 +244,16 @@ public class turnManager : MonoBehaviour
                 */
 
                 i+=1;
+                length = makeDeck.Hands["hand2"].Count;
+            }
+            else {
+                length = -1;
             }
         }
 
         //opponent DOES NOT have an attack phase
         
-        Debug.Log("opponent's first turn");
+        //Debug.Log("opponent's first turn");
 
         //if there are cards in the back row, move them forward
         OpponentSlotManager.moveForward();
@@ -239,6 +265,15 @@ public class turnManager : MonoBehaviour
 
     //alter the game state to the opponent's turn (every turn but the first)
     private void opponentTurn() {
+
+        //double-check that the opponent didn't just lose
+        emptySlots = OpponentSlotManager.checkEmpty();
+            if (emptySlots.Count == 6) {
+                winGame();
+            }
+
+        tieCheck += 1;
+        
         isOpponentTurn = true;
 
         //opponent plays cards
@@ -257,42 +292,61 @@ public class turnManager : MonoBehaviour
         var rand = new System.Random();
         int r = rand.Next(0, emptySlots.Count);
         int i = 0;
-        
-        if (emptySlots.Count > 0) {
-            foreach (Card c in makeDeck.Hands["hand2"]) {
-                if (i <= r) {
-                    tieCheck += 1;
-                    GameObject cardObj = null;
-                    
-                    if (c.id == 1) {
-                        cardObj = Instantiate(butcher1, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.identity);
-                    }
-                    else if (c.id == 2) {
-                        cardObj = Instantiate(lawyer2, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.identity);
-                    }
-                    else if (c.id == 3) {
-                        cardObj = Instantiate(mechanic3, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.identity);
-                    }
-                    else if (c.id == 4) {
-                        cardObj = Instantiate(nurse4, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.identity);
-                    }
-                    else if (c.id == 5) {
-                        cardObj = Instantiate(police5, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.identity);
-                    }
 
-                    //get list of empty slots
-                    emptySlots = OpponentSlotManager.checkEmpty();
-                    int r2 = rand.Next(0, emptySlots.Count);
+        int length = makeDeck.Hands["hand2"].Count;
+                
+                while (length > 0) {
+                    if (emptySlots.Count > 0) {
 
-                    //move card to random empty slot
-                    OpponentSlotManager.moveByClick(cardObj, emptySlots[r2]);
+                        tieCheck = 0;
+                        
+                        Card c = makeDeck.Hands["hand2"][0]; //always spawn in the first card in the hand
+                        GameObject cardObj = null;
+                        
+                        if (c.id == 1) {
+                            cardObj = Instantiate(butcher1, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.identity);
+                        }
+                        else if (c.id == 2) {
+                            cardObj = Instantiate(lawyer2, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.identity);
+                        }
+                        else if (c.id == 3) {
+                            cardObj = Instantiate(mechanic3, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.identity);
+                        }
+                        else if (c.id == 4) {
+                            cardObj = Instantiate(nurse4, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.identity);
+                        }
+                        else if (c.id == 5) {
+                            cardObj = Instantiate(police5, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.identity);
+                        }
+                        else if (c.id == 6) {
+                            cardObj = Instantiate(teacher6, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.identity);
+                        }
+                        else if (c.id == 7) {
+                            cardObj = Instantiate(judge7, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.identity);
+                        }
+                        else { //if there's no id just spawn a butcher 
+                            cardObj = Instantiate(butcher1, new Vector3(horizontalPos, verticalPos, depthPos), Quaternion.identity);
+                        }
+                        cardTracker.addCardToDict(cardObj, c); //add to tracker
 
-                    Debug.Log("moved " + cardObj + " to " + emptySlots[r2]);
+                        //get list of empty slots
+                        emptySlots = OpponentSlotManager.checkEmpty();
+                        int r2 = rand.Next(0, emptySlots.Count);
 
-                    i+=1;
+                        //move card to random empty slot
+                        OpponentSlotManager.moveByClick(cardObj, emptySlots[r2]);
+
+                        //Debug.Log("moved " + cardObj + " to " + emptySlots[r2]);
+
+                        i+=1;
+                        length = makeDeck.Hands["hand2"].Count;
+                    }
+                    else {
+                        length = -1;
+                    }
                 }
-            }
-        }
+            
+        
 
 
         //if there are cards in the back row with no card in front of them, move them forward
@@ -301,6 +355,7 @@ public class turnManager : MonoBehaviour
         //turn is over
         isOpponentTurn = false;
         opponentAttackPhase();
+        PlayerSlotManager.moveForward();
 
         //check if opponent has won after opponsnt's attack phase ends
         playerEmptySlots = PlayerSlotManager.checkEmpty();
@@ -318,9 +373,10 @@ public class turnManager : MonoBehaviour
         mainCamera.GetComponent<Camera>().enabled = false;
         tableCamera.GetComponent<Camera>().enabled = true;
 
-        //TO DO: opponent attacks
+        //opponent attacks
+        attackPhase.startAttack(false); //false means it is not the player's attack (ie. it's the opponent's)
 
-        Debug.Log("opponent's attack phase");
+        //Debug.Log("opponent's attack phase");
 
         //if there are cards in the back row with no card in front of them, move them forward
         OpponentSlotManager.moveForward();
@@ -332,13 +388,13 @@ public class turnManager : MonoBehaviour
 
     //detect unwinnable/unlosable game and break ties
     private void tieChecker() {
-        if ((makeDeck.Decks["deck1"].Count == 0 || makeDeck.Decks["deck2"].Count == 0) && tieCheck > 3) {
+        if ((makeDeck.Decks["deck1"].Count <= 1 || makeDeck.Decks["deck2"].Count <= 1) && tieCheck > 3) {
             List<int> emptyOpSlots = OpponentSlotManager.checkEmpty();
             List<int> emptyPlSlots = PlayerSlotManager.checkEmpty();
 
             //winner is the one with more cards on the table
             //if equal, player wins
-            if (emptyOpSlots.Count > emptyPlSlots.Count) {
+            if (emptyOpSlots.Count < emptyPlSlots.Count) {
                 loseGame();
             }
             else {
